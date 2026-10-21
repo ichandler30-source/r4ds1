@@ -3,4 +3,8 @@ title: "Billboard Hot 100"
 Author: Isabella Chandler
 format: html
 ---
+library(tidyverse)
+#| message: false
+execute:
+  echo: false
 
