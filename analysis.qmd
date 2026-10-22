@@ -8,3 +8,19 @@ library(tidyverse)
 execute:
   echo: false
 
+```{r}
+#| cache: true
+billboard <- readr::read_csv("data/billboard.csv", show_col_types = FALSE)
+print(billboard)
+```
+
+```{r}
+billboard |>
+  ggplot2::ggplot(ggplot2::aes(x = wk1)) +
+  ggplot2::geom_histogram(binwidth = 10, boundary = 0.5) +
+  ggplot2::labs(
+    x = "Week 1 ranking",
+    y = "Number of songs",
+    subtitle = paste("Values plotted:", sum(!is.na(billboard$wk1)))
+  )
+```
