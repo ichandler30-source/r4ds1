@@ -10,17 +10,150 @@ execute:
 
 ```{r}
 #| cache: true
-billboard <- readr::read_csv("data/billboard.csv", show_col_types = FALSE)
-print(billboard)
+billboard <- readr::read_csv("data/billboard.csv", show_col_types = FALSE) |>
+  dplyr::mutate(song = dplyr::row_number()) |>
+  tidyr::pivot_longer(
+    cols = dplyr::starts_with("wk"),
+    names_to = "week",
+    names_prefix = "wk",
+    names_transform = list(week = as.integer),
+    values_to = "rank"
+  )
+
+song_summary <- billboard |>
+  dplyr::filter(!is.na(rank)) |>
+  dplyr::group_by(song, artist, track) |>
+  dplyr::summarise(
+    first_rank = dplyr::first(rank),
+    best_rank = min(rank),
+    first_week_at_best_rank = min(week[rank == min(rank)]),
+    weeks_on_chart = dplyr::n(),
+    .groups = "drop"
+  )
 ```
 
 ```{r}
 billboard |>
-  ggplot2::ggplot(ggplot2::aes(x = wk1)) +
+  dplyr::filter(week == 1) |>
+  ggplot2::ggplot(ggplot2::aes(x = rank)) +
   ggplot2::geom_histogram(binwidth = 10, boundary = 0.5) +
   ggplot2::labs(
     x = "Week 1 ranking",
     y = "Number of songs",
-    subtitle = paste("Values plotted:", sum(!is.na(billboard$wk1)))
+    subtitle = paste(
+      "Values plotted:",
+      sum(!is.na(dplyr::filter(billboard, week == 1)$rank))
+    )
+  )
+```
+
+```{r}
+ranking_counts <- billboard |>
+  dplyr::group_by(week) |>
+  dplyr::summarise(
+    Missing = sum(is.na(rank)),
+    Present = sum(!is.na(rank)),
+    .groups = "drop"
+  ) |>
+  dplyr::filter(week %in% c(1, 4, 10, 20, 40, 76))
+
+knitr::kable(
+  ranking_counts,
+  col.names = c("Week", "Missing rankings", "Present rankings")
+)
+```
+
+```{r}
+last_week_20 <- billboard |>
+  dplyr::filter(!is.na(rank)) |>
+  dplyr::group_by(song) |>
+  dplyr::filter(week == max(week)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(week == 20) |>
+  dplyr::summarise(
+    Songs = dplyr::n(),
+    Ranked_below_50 = sum(rank > 50)
+  )
+
+knitr::kable(
+  last_week_20,
+  col.names = c("Songs ending in week 20", "Ranked below 50")
+)
+```
+
+```{r}
+knitr::kable(
+  song_summary |>
+    dplyr::select(
+      artist, track, first_rank, best_rank,
+      first_week_at_best_rank, weeks_on_chart
+    ),
+  col.names = c(
+    "Artist", "Track", "First rank", "Best rank",
+    "First week at best rank", "Weeks on chart"
+  )
+)
+```
+
+```{r}
+notable_songs <- dplyr::bind_rows(
+  song_summary |>
+    dplyr::filter(best_rank == 1) |>
+    dplyr::slice_min(first_week_at_best_rank, n = 1, with_ties = FALSE) |>
+    dplyr::mutate(Notable = "Fastest to number one"),
+  song_summary |>
+    dplyr::filter(best_rank == 1) |>
+    dplyr::slice_max(first_week_at_best_rank, n = 1, with_ties = FALSE) |>
+    dplyr::mutate(Notable = "Slowest to number one"),
+  song_summary |>
+    dplyr::filter(best_rank <= 10) |>
+    dplyr::slice_max(weeks_on_chart, n = 1, with_ties = FALSE) |>
+    dplyr::mutate(Notable = "Longest chart run among top-10 songs")
+) |>
+  dplyr::select(
+    Notable, artist, track, first_week_at_best_rank, weeks_on_chart
+  )
+
+knitr::kable(
+  notable_songs,
+  col.names = c("Notable song", "Artist", "Track", "Week at best rank", "Weeks on chart")
+)
+```
+
+```{r}
+top_10_songs <- song_summary |>
+  dplyr::filter(best_rank <= 10) |>
+  dplyr::mutate(
+    highlight = dplyr::case_when(
+      artist == "Madonna" & track == "Music" ~ "Madonna - Music",
+      artist == "Lonestar" & track == "Amazed" ~ "Lonestar - Amazed",
+      artist == "Creed" & track == "Higher" ~ "Creed - Higher",
+      TRUE ~ "Other top-10 songs"
+    )
+  )
+
+billboard |>
+  dplyr::inner_join(
+    top_10_songs |> dplyr::select(song, highlight),
+    by = "song"
+  ) |>
+  ggplot2::ggplot(
+    ggplot2::aes(x = week, y = rank, group = song, color = highlight)
+  ) +
+  ggplot2::geom_line(alpha = 0.65, linewidth = 0.5) +
+  ggplot2::scale_color_manual(
+    values = c(
+      "Other top-10 songs" = "gray70",
+      "Madonna - Music" = "#D55E00",
+      "Lonestar - Amazed" = "#0072B2",
+      "Creed - Higher" = "#009E73"
+    )
+  ) +
+  ggplot2::scale_y_reverse(breaks = seq(1, 100, by = 10)) +
+  ggplot2::labs(
+    x = "Week",
+    y = "Billboard ranking",
+    color = "Song",
+    title = "Rankings of songs that reached the top 10"
   )
 ```

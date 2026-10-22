@@ -106,44 +106,2823 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>library(tidyverse) #| message: false execute: echo: false</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/billboard.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(billboard)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 317 × 79
-   artist     track date.entered   wk1   wk2   wk3   wk4   wk5   wk6   wk7   wk8
-   &lt;chr&gt;      &lt;chr&gt; &lt;date&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1 2 Pac      Baby… 2000-02-26      87    82    72    77    87    94    99    NA
- 2 2Ge+her    The … 2000-09-02      91    87    92    NA    NA    NA    NA    NA
- 3 3 Doors D… Kryp… 2000-04-08      81    70    68    67    66    57    54    53
- 4 3 Doors D… Loser 2000-10-21      76    76    72    69    67    65    55    59
- 5 504 Boyz   Wobb… 2000-04-15      57    34    25    17    17    31    36    49
- 6 98^0       Give… 2000-08-19      51    39    34    26    26    19     2     2
- 7 A*Teens    Danc… 2000-07-08      97    97    96    95   100    NA    NA    NA
- 8 Aaliyah    I Do… 2000-01-29      84    62    51    41    38    35    35    38
- 9 Aaliyah    Try … 2000-03-18      59    53    38    28    21    18    16    14
-10 Adams, Yo… Open… 2000-08-26      76    76    74    69    68    67    61    58
-# ℹ 307 more rows
-# ℹ 68 more variables: wk9 &lt;dbl&gt;, wk10 &lt;dbl&gt;, wk11 &lt;dbl&gt;, wk12 &lt;dbl&gt;,
-#   wk13 &lt;dbl&gt;, wk14 &lt;dbl&gt;, wk15 &lt;dbl&gt;, wk16 &lt;dbl&gt;, wk17 &lt;dbl&gt;, wk18 &lt;dbl&gt;,
-#   wk19 &lt;dbl&gt;, wk20 &lt;dbl&gt;, wk21 &lt;dbl&gt;, wk22 &lt;dbl&gt;, wk23 &lt;dbl&gt;, wk24 &lt;dbl&gt;,
-#   wk25 &lt;dbl&gt;, wk26 &lt;dbl&gt;, wk27 &lt;dbl&gt;, wk28 &lt;dbl&gt;, wk29 &lt;dbl&gt;, wk30 &lt;dbl&gt;,
-#   wk31 &lt;dbl&gt;, wk32 &lt;dbl&gt;, wk33 &lt;dbl&gt;, wk34 &lt;dbl&gt;, wk35 &lt;dbl&gt;, wk36 &lt;dbl&gt;,
-#   wk37 &lt;dbl&gt;, wk38 &lt;dbl&gt;, wk39 &lt;dbl&gt;, wk40 &lt;dbl&gt;, wk41 &lt;dbl&gt;, wk42 &lt;dbl&gt;, …</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"data/billboard.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">song =</span> dplyr<span class="sc">::</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> dplyr<span class="sc">::</span><span class="fu">starts_with</span>(<span class="st">"wk"</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"week"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_prefix =</span> <span class="st">"wk"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_transform =</span> <span class="fu">list</span>(<span class="at">week =</span> as.integer),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rank"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>song_summary <span class="ot">&lt;-</span> billboard <span class="sc">|&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(rank)) <span class="sc">|&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(song, artist, track) <span class="sc">|&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">first_rank =</span> dplyr<span class="sc">::</span><span class="fu">first</span>(rank),</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">best_rank =</span> <span class="fu">min</span>(rank),</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">first_week_at_best_rank =</span> <span class="fu">min</span>(week[rank <span class="sc">==</span> <span class="fu">min</span>(rank)]),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">weeks_on_chart =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">x =</span> wk1)) <span class="sc">+</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">boundary =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Week 1 ranking"</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of songs"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">"Values plotted:"</span>, <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(billboard<span class="sc">$</span>wk1)))</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(week <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">x =</span> rank)) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">boundary =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Week 1 ranking"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of songs"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Values plotted:"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(dplyr<span class="sc">::</span><span class="fu">filter</span>(billboard, week <span class="sc">==</span> <span class="dv">1</span>)<span class="sc">$</span>rank))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ranking_counts <span class="ot">&lt;-</span> billboard <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(week) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Missing =</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(rank)),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Present =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(rank)),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(week <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">76</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  ranking_counts,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Week"</span>, <span class="st">"Missing rankings"</span>, <span class="st">"Present rankings"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Week</th>
+<th style="text-align: right;">Missing rankings</th>
+<th style="text-align: right;">Present rankings</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">317</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">300</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">244</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">171</td>
+<td style="text-align: right;">146</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">310</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">317</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>last_week_20 <span class="ot">&lt;-</span> billboard <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(rank)) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(song) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(week <span class="sc">==</span> <span class="fu">max</span>(week)) <span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(week <span class="sc">==</span> <span class="dv">20</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Songs =</span> dplyr<span class="sc">::</span><span class="fu">n</span>(),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ranked_below_50 =</span> <span class="fu">sum</span>(rank <span class="sc">&gt;</span> <span class="dv">50</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  last_week_20,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Songs ending in week 20"</span>, <span class="st">"Ranked below 50"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Songs ending in week 20</th>
+<th style="text-align: right;">Ranked below 50</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">77</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  song_summary <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      artist, track, first_rank, best_rank,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      first_week_at_best_rank, weeks_on_chart</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Artist"</span>, <span class="st">"Track"</span>, <span class="st">"First rank"</span>, <span class="st">"Best rank"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"First week at best rank"</span>, <span class="st">"Weeks on chart"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 21%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 21%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Artist</th>
+<th style="text-align: left;">Track</th>
+<th style="text-align: right;">First rank</th>
+<th style="text-align: right;">Best rank</th>
+<th style="text-align: right;">First week at best rank</th>
+<th style="text-align: right;">Weeks on chart</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2 Pac</td>
+<td style="text-align: left;">Baby Don’t Cry (Keep…</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2Ge+her</td>
+<td style="text-align: left;">The Hardest Part Of …</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3 Doors Down</td>
+<td style="text-align: left;">Kryptonite</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">53</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">3 Doors Down</td>
+<td style="text-align: left;">Loser</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">504 Boyz</td>
+<td style="text-align: left;">Wobble Wobble</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">98^0</td>
+<td style="text-align: left;">Give Me Just One Nig…</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A*Teens</td>
+<td style="text-align: left;">Dancing Queen</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aaliyah</td>
+<td style="text-align: left;">I Don’t Wanna</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Aaliyah</td>
+<td style="text-align: left;">Try Again</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adams, Yolanda</td>
+<td style="text-align: left;">Open My Heart</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Adkins, Trace</td>
+<td style="text-align: left;">More</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aguilera, Christina</td>
+<td style="text-align: left;">Come On Over Baby (A…</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Aguilera, Christina</td>
+<td style="text-align: left;">I Turn To You</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aguilera, Christina</td>
+<td style="text-align: left;">What A Girl Wants</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alice Deejay</td>
+<td style="text-align: left;">Better Off Alone</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Allan, Gary</td>
+<td style="text-align: left;">Smoke Rings In The D…</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Amber</td>
+<td style="text-align: left;">Sexual</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">29</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anastacia</td>
+<td style="text-align: left;">I’m Outta Love</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Anthony, Marc</td>
+<td style="text-align: left;">My Baby You</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anthony, Marc</td>
+<td style="text-align: left;">You Sang To Me</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Avant</td>
+<td style="text-align: left;">My First Love</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Avant</td>
+<td style="text-align: left;">Separated</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BBMak</td>
+<td style="text-align: left;">Back Here</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">31</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Backstreet Boys, The</td>
+<td style="text-align: left;">Shape Of My Heart</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Backstreet Boys, The</td>
+<td style="text-align: left;">Show Me The Meaning …</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Backstreet Boys, The</td>
+<td style="text-align: left;">The One</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Badu, Erkyah</td>
+<td style="text-align: left;">Bag Lady</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Baha Men</td>
+<td style="text-align: left;">Who Let The Dogs Out</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Barenaked Ladies</td>
+<td style="text-align: left;">Pinch Me</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Beenie Man</td>
+<td style="text-align: left;">Girls Dem Sugar</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Before Dark</td>
+<td style="text-align: left;">Monica</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bega, Lou</td>
+<td style="text-align: left;">Tricky Tricky</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Big Punisher</td>
+<td style="text-align: left;">It’s So Hard</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Black Rob</td>
+<td style="text-align: left;">Whoa!</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Black, Clint</td>
+<td style="text-align: left;">Been There</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Blaque</td>
+<td style="text-align: left;">Bring It All To Me</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Blige, Mary J.</td>
+<td style="text-align: left;">Deep Inside</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Blige, Mary J.</td>
+<td style="text-align: left;">Give Me You</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Blink-182</td>
+<td style="text-align: left;">All The Small Things</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bloodhound Gang</td>
+<td style="text-align: left;">The Bad Touch</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bon Jovi</td>
+<td style="text-align: left;">It’s My Life</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Braxton, Toni</td>
+<td style="text-align: left;">He Wasn’t Man Enough</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Braxton, Toni</td>
+<td style="text-align: left;">Just Be A Man About …</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Braxton, Toni</td>
+<td style="text-align: left;">Spanish Guitar</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Brock, Chad</td>
+<td style="text-align: left;">A Country Boy Can Su…</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brock, Chad</td>
+<td style="text-align: left;">Yes!</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Brooks &amp; Dunn</td>
+<td style="text-align: left;">You’ll Always Be Lov…</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Brooks, Garth</td>
+<td style="text-align: left;">Do What You Gotta Do</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Byrd, Tracy</td>
+<td style="text-align: left;">Put Your Hand In Min…</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cagle, Chris</td>
+<td style="text-align: left;">My Love Goes On And …</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cam’ron</td>
+<td style="text-align: left;">What Means The World…</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Carey, Mariah</td>
+<td style="text-align: left;">Crybaby</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Carey, Mariah</td>
+<td style="text-align: left;">Thank God I Found Yo…</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Carter, Aaron</td>
+<td style="text-align: left;">Aaron’s Party (Come …</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Carter, Torrey</td>
+<td style="text-align: left;">Take That</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Changing Faces</td>
+<td style="text-align: left;">That Other Woman</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chesney, Kenny</td>
+<td style="text-align: left;">I Lost It</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chesney, Kenny</td>
+<td style="text-align: left;">What I Need To Do</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Clark Family Experience</td>
+<td style="text-align: left;">Meanwhile Back At Th…</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Clark, Terri</td>
+<td style="text-align: left;">A Little Gasoline</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Common</td>
+<td style="text-align: left;">The Light</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Counting Crows</td>
+<td style="text-align: left;">Hanginaround</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Creed</td>
+<td style="text-align: left;">Higher</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: right;">57</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Creed</td>
+<td style="text-align: left;">With Arms Wide Open</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cyrus, Billy Ray</td>
+<td style="text-align: left;">You Won’t Be Lonely …</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">D’Angelo</td>
+<td style="text-align: left;">Left &amp; Right</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">D’Angelo</td>
+<td style="text-align: left;">Untitled (How Does I…</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">DMX</td>
+<td style="text-align: left;">Party Up (Up In Here…</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DMX</td>
+<td style="text-align: left;">What You Want</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">DMX</td>
+<td style="text-align: left;">What’s My Name</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Da Brat</td>
+<td style="text-align: left;">That’s What I’m Look…</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Da Brat</td>
+<td style="text-align: left;">What’Chu Like</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Davidson, Clay</td>
+<td style="text-align: left;">Unconditional</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">De La Soul</td>
+<td style="text-align: left;">All Good?</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Destiny’s Child</td>
+<td style="text-align: left;">Independent Women Pa…</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Destiny’s Child</td>
+<td style="text-align: left;">Jumpin’ Jumpin’</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Destiny’s Child</td>
+<td style="text-align: left;">Say My Name</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Diffie, Joe</td>
+<td style="text-align: left;">It’s Always Somethin…</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Diffie, Joe</td>
+<td style="text-align: left;">The Quittin’ Kind</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dion, Celine</td>
+<td style="text-align: left;">That’s The Way It Is</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dixie Chicks, The</td>
+<td style="text-align: left;">Cold Day In July</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dixie Chicks, The</td>
+<td style="text-align: left;">Cowboy Take Me Away</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dixie Chicks, The</td>
+<td style="text-align: left;">Goodbye Earl</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dixie Chicks, The</td>
+<td style="text-align: left;">Without You</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dr.&nbsp;Dre</td>
+<td style="text-align: left;">Forgot About Dre</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dr.&nbsp;Dre</td>
+<td style="text-align: left;">The Next Episode</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Drama</td>
+<td style="text-align: left;">Left, Right, Left</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dream</td>
+<td style="text-align: left;">He Loves U Not</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eastsidaz, The</td>
+<td style="text-align: left;">G’D Up</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Eastsidaz, The</td>
+<td style="text-align: left;">Got Beef</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eiffel 65</td>
+<td style="text-align: left;">Blue</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Elliott, Missy “Misdemeanor”</td>
+<td style="text-align: left;">Hot Boyz</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eminem</td>
+<td style="text-align: left;">Stan</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Eminem</td>
+<td style="text-align: left;">The Real Slim Shady</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eminem</td>
+<td style="text-align: left;">The Way I Am</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">En Vogue</td>
+<td style="text-align: left;">Riddle</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Estefan, Gloria</td>
+<td style="text-align: left;">No Me Dejes De Quere…</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Evans, Sara</td>
+<td style="text-align: left;">Born To Fly</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Eve</td>
+<td style="text-align: left;">Got It All</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Eve</td>
+<td style="text-align: left;">Love Is Blind</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Everclear</td>
+<td style="text-align: left;">Wonderful</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fabian, Lara</td>
+<td style="text-align: left;">I Will Love Again</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fatboy Slim</td>
+<td style="text-align: left;">The Rockafeller Skan…</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Filter</td>
+<td style="text-align: left;">Take A Picture</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Foo Fighters</td>
+<td style="text-align: left;">Learn To Fly</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fragma</td>
+<td style="text-align: left;">Toca’s Miracle</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Funkmaster Flex</td>
+<td style="text-align: left;">Do You</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ghostface Killah</td>
+<td style="text-align: left;">Cherchez LaGhost</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gill, Vince</td>
+<td style="text-align: left;">Feels Like Love</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gilman, Billy</td>
+<td style="text-align: left;">One Voice</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ginuwine</td>
+<td style="text-align: left;">None Of Ur Friends B…</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ginuwine</td>
+<td style="text-align: left;">The Best Man I Can B…</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Goo Goo Dolls</td>
+<td style="text-align: left;">Broadway</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gray, Macy</td>
+<td style="text-align: left;">I Try</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Griggs, Andy</td>
+<td style="text-align: left;">She’s More</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Guy</td>
+<td style="text-align: left;">Dancin’</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hanson</td>
+<td style="text-align: left;">This Time Around</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hart, Beth</td>
+<td style="text-align: left;">L.A. Song</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Heatherly, Eric</td>
+<td style="text-align: left;">Flowers On The Wall</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Henley, Don</td>
+<td style="text-align: left;">Taking You Home</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Herndon, Ty</td>
+<td style="text-align: left;">No Mercy</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hill, Faith</td>
+<td style="text-align: left;">Breathe</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">53</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hill, Faith</td>
+<td style="text-align: left;">Let’s Make Love</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hoku</td>
+<td style="text-align: left;">Another Dumb Blonde</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hollister, Dave</td>
+<td style="text-align: left;">Can’t Stay</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hot Boys</td>
+<td style="text-align: left;">I Need A Hot Girl</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Houston, Whitney</td>
+<td style="text-align: left;">Could I Have This Ki…</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Houston, Whitney</td>
+<td style="text-align: left;">I Learned From The B…</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Houston, Whitney</td>
+<td style="text-align: left;">My Love Is Your Love</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Houston, Whitney</td>
+<td style="text-align: left;">Same Script, Differe…</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">IMx</td>
+<td style="text-align: left;">Stay The Night</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ice Cube</td>
+<td style="text-align: left;">You Can Do It</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ideal</td>
+<td style="text-align: left;">Whatever</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Iglesias, Enrique</td>
+<td style="text-align: left;">Be With You</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Iglesias, Enrique</td>
+<td style="text-align: left;">Rhythm Divine</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">J-Shin</td>
+<td style="text-align: left;">One Night Stand</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ja Rule</td>
+<td style="text-align: left;">Between Me And You</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jackson, Alan</td>
+<td style="text-align: left;">It Must Be Love</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jackson, Alan</td>
+<td style="text-align: left;">Pop A Top</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jackson, Alan</td>
+<td style="text-align: left;">www.memory</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jagged Edge</td>
+<td style="text-align: left;">He Can’t Love U</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jagged Edge</td>
+<td style="text-align: left;">Let’s Get Married</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Janet</td>
+<td style="text-align: left;">Doesn’t Really Matte…</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jay-Z</td>
+<td style="text-align: left;">Anything</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">55</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jay-Z</td>
+<td style="text-align: left;">Big Pimpin’</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jay-Z</td>
+<td style="text-align: left;">Do It Again (Put Ya …</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jay-Z</td>
+<td style="text-align: left;">Hey Papi</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jay-Z</td>
+<td style="text-align: left;">I Just Wanna Love U …</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jean, Wyclef</td>
+<td style="text-align: left;">911</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Joe</td>
+<td style="text-align: left;">I Wanna Know</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">44</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Joe</td>
+<td style="text-align: left;">Treat Her Like A Lad…</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">John, Elton</td>
+<td style="text-align: left;">Someday Out Of The B…</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jones, Donell</td>
+<td style="text-align: left;">Where I Wanna Be</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jordan, Montell</td>
+<td style="text-align: left;">Get It On.. Tonite</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Juvenile</td>
+<td style="text-align: left;">U Understand</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kandi</td>
+<td style="text-align: left;">Don’t Think I’m Not</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Keith, Toby</td>
+<td style="text-align: left;">Country Comes To Tow…</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Keith, Toby</td>
+<td style="text-align: left;">How Do You Like Me N…</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Kelis</td>
+<td style="text-align: left;">Caught Out There</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kenny G</td>
+<td style="text-align: left;">Auld Lang Syne (The …</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Kid Rock</td>
+<td style="text-align: left;">Only God Knows Why</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kravitz, Lenny</td>
+<td style="text-align: left;">I Belong To You</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Kumbia Kings</td>
+<td style="text-align: left;">U Don’t Love Me</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LFO</td>
+<td style="text-align: left;">I Don’t Wanna Kiss Y…</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LFO</td>
+<td style="text-align: left;">West Side Story</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LL Cool J</td>
+<td style="text-align: left;">Imagine That</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Larrieux, Amel</td>
+<td style="text-align: left;">Get Up</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lawrence, Tracy</td>
+<td style="text-align: left;">Lessons Learned</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Levert, Gerald</td>
+<td style="text-align: left;">Baby U Are</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Levert, Gerald</td>
+<td style="text-align: left;">Mr.&nbsp;Too Damn Good</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lil Bow Wow</td>
+<td style="text-align: left;">Bounce With Me</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lil Wayne</td>
+<td style="text-align: left;">Tha Block Is Hot</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lil’ Kim</td>
+<td style="text-align: left;">How Many Licks?</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lil’ Kim</td>
+<td style="text-align: left;">No Matter What They …</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lil’ Mo</td>
+<td style="text-align: left;">Ta Da</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lil’ Zane</td>
+<td style="text-align: left;">Callin’ Me</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Limp Bizkit</td>
+<td style="text-align: left;">N 2 Gether Now</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Limp Bizkit</td>
+<td style="text-align: left;">Re-Arranged</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Limp Bizkit</td>
+<td style="text-align: left;">Rollin’</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lonestar</td>
+<td style="text-align: left;">Amazed</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">55</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lonestar</td>
+<td style="text-align: left;">Smile</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lonestar</td>
+<td style="text-align: left;">What About Now</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lopez, Jennifer</td>
+<td style="text-align: left;">Feelin’ Good</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Loveless, Patty</td>
+<td style="text-align: left;">That’s The Kind Of M…</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lox</td>
+<td style="text-align: left;">Ryde or Die, Chick</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lucy Pearl</td>
+<td style="text-align: left;">Dance Tonight</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ludacris</td>
+<td style="text-align: left;">What’s Your Fantasy</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M2M</td>
+<td style="text-align: left;">Don’t Say You Love M…</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M2M</td>
+<td style="text-align: left;">Mirror Mirror</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Madison Avenue</td>
+<td style="text-align: left;">Don’t Call Me Baby</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Madonna</td>
+<td style="text-align: left;">American Pie</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Madonna</td>
+<td style="text-align: left;">Music</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Martin, Ricky</td>
+<td style="text-align: left;">Private Emotion</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Martin, Ricky</td>
+<td style="text-align: left;">Shake Your Bon-Bon</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Martin, Ricky</td>
+<td style="text-align: left;">She Bangs</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mary Mary</td>
+<td style="text-align: left;">Shackles (Praise You…</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Master P</td>
+<td style="text-align: left;">Souljas</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">McBride, Martina</td>
+<td style="text-align: left;">Love’s The Only Hous…</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">McBride, Martina</td>
+<td style="text-align: left;">There You Are</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">McEntire, Reba</td>
+<td style="text-align: left;">I’ll Be</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">McEntire, Reba</td>
+<td style="text-align: left;">What Do You Say</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">McGraw, Tim</td>
+<td style="text-align: left;">My Best Friend</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">McGraw, Tim</td>
+<td style="text-align: left;">My Next Thirty Years</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">McGraw, Tim</td>
+<td style="text-align: left;">Some Things Never Ch…</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">58</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">McKnight, Brian</td>
+<td style="text-align: left;">Stay Or Let It Go</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Messina, Jo Dee</td>
+<td style="text-align: left;">Because You Love Me</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Messina, Jo Dee</td>
+<td style="text-align: left;">That’s The Way</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Metallica</td>
+<td style="text-align: left;">I Disappear</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Metallica</td>
+<td style="text-align: left;">No Leaf Clover (Live…</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Montgomery Gentry</td>
+<td style="text-align: left;">Daddy Won’t Sell The…</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Montgomery, John Michael</td>
+<td style="text-align: left;">The Little Girl</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Moore, Chante</td>
+<td style="text-align: left;">Straight Up</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Moore, Mandy</td>
+<td style="text-align: left;">I Wanna Be With You</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mumba, Samantha</td>
+<td style="text-align: left;">Gotta Tell You</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Musiq</td>
+<td style="text-align: left;">Just Friends</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mya</td>
+<td style="text-align: left;">Case Of The Ex (What…</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mya</td>
+<td style="text-align: left;">The Best Of Me</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mystikal</td>
+<td style="text-align: left;">Shake Ya Ass</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">N’Sync</td>
+<td style="text-align: left;">Bye Bye Bye</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">N’Sync</td>
+<td style="text-align: left;">It’s Gonna Be Me</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">N’Sync</td>
+<td style="text-align: left;">This I Promise You</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nas</td>
+<td style="text-align: left;">You Owe Me</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nelly</td>
+<td style="text-align: left;">(Hot S**t) Country G…</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">34</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Next</td>
+<td style="text-align: left;">Wifey</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nine Days</td>
+<td style="text-align: left;">Absolutely (Story Of…</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nine Days</td>
+<td style="text-align: left;">If I Am</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">No Doubt</td>
+<td style="text-align: left;">Simple Kind Of Life</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nu Flavor</td>
+<td style="text-align: left;">3 Little Words</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Offspring, The</td>
+<td style="text-align: left;">Original Prankster</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Paisley, Brad</td>
+<td style="text-align: left;">Me Neither</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Paisley, Brad</td>
+<td style="text-align: left;">We Danced</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Papa Roach</td>
+<td style="text-align: left;">Last Resort</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pearl Jam</td>
+<td style="text-align: left;">Nothing As It Seems</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pink</td>
+<td style="text-align: left;">Most Girls</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pink</td>
+<td style="text-align: left;">There U Go</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Price, Kelly</td>
+<td style="text-align: left;">As We Lay</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Price, Kelly</td>
+<td style="text-align: left;">Love Sets You Free</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Price, Kelly</td>
+<td style="text-align: left;">You Should’ve Told M…</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Profyle</td>
+<td style="text-align: left;">Liar</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Puff Daddy</td>
+<td style="text-align: left;">Best Friend</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Q-Tip</td>
+<td style="text-align: left;">Breathe And Stop</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R.E.M.</td>
+<td style="text-align: left;">The Great Beyond</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rascal Flatts</td>
+<td style="text-align: left;">Prayin’ For Daylight</td>
+<td style="text-align: right;">87</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Raye, Collin</td>
+<td style="text-align: left;">Couldn’t Last A Mome…</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Red Hot Chili Peppers</td>
+<td style="text-align: left;">Californication</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Red Hot Chili Peppers</td>
+<td style="text-align: left;">Otherside</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rimes, LeAnn</td>
+<td style="text-align: left;">Big Deal</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rimes, LeAnn</td>
+<td style="text-align: left;">Can’t Fight The Moon…</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rimes, LeAnn</td>
+<td style="text-align: left;">I Need You</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rogers, Kenny</td>
+<td style="text-align: left;">Buy Me A Rose</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ruff Endz</td>
+<td style="text-align: left;">No More</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sammie</td>
+<td style="text-align: left;">I Like It</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Santana</td>
+<td style="text-align: left;">Maria, Maria</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Savage Garden</td>
+<td style="text-align: left;">Crash And Burn</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Savage Garden</td>
+<td style="text-align: left;">I Knew I Loved You</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SheDaisy</td>
+<td style="text-align: left;">Deck The Halls</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SheDaisy</td>
+<td style="text-align: left;">I Will.. But</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SheDaisy</td>
+<td style="text-align: left;">This Woman Needs</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sheist, Shade</td>
+<td style="text-align: left;">Where I Wanna Be</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shyne</td>
+<td style="text-align: left;">Bad Boyz</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Simpson, Jessica</td>
+<td style="text-align: left;">I Think I’m In Love …</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Simpson, Jessica</td>
+<td style="text-align: left;">Where You Are</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sisqo</td>
+<td style="text-align: left;">Got To Get It</td>
+<td style="text-align: right;">92</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sisqo</td>
+<td style="text-align: left;">Incomplete</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sisqo</td>
+<td style="text-align: left;">Thong Song</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sister Hazel</td>
+<td style="text-align: left;">Change Your Mind</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Smash Mouth</td>
+<td style="text-align: left;">Then The Morning Com…</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Smith, Will</td>
+<td style="text-align: left;">Freakin’ It</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Son By Four</td>
+<td style="text-align: left;">A Puro Dolor (Purest…</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sonique</td>
+<td style="text-align: left;">It Feels So Good</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SoulDecision</td>
+<td style="text-align: left;">Faded</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spears, Britney</td>
+<td style="text-align: left;">From The Bottom Of M…</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Spears, Britney</td>
+<td style="text-align: left;">Lucky</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spears, Britney</td>
+<td style="text-align: left;">Oops!.. I Did It Aga…</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Spencer, Tracie</td>
+<td style="text-align: left;">Still In My Heart</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">88</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Splender</td>
+<td style="text-align: left;">I Think God Can Expl…</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sting</td>
+<td style="text-align: left;">Desert Rose</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Stone Temple Pilots</td>
+<td style="text-align: left;">Sour Girl</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Stone, Angie</td>
+<td style="text-align: left;">No More Rain (In Thi…</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Strait, George</td>
+<td style="text-align: left;">Go On</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Strait, George</td>
+<td style="text-align: left;">The Best Day</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sugar Ray</td>
+<td style="text-align: left;">Falls Apart</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TLC</td>
+<td style="text-align: left;">Dear Lie</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tamar</td>
+<td style="text-align: left;">If You Don’t Wanna L…</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tamia</td>
+<td style="text-align: left;">Can’t Go For That</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Third Eye Blind</td>
+<td style="text-align: left;">Deep Inside Of You</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Third Eye Blind</td>
+<td style="text-align: left;">Never Let You Go</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Thomas, Carl</td>
+<td style="text-align: left;">Emotional</td>
+<td style="text-align: right;">77</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Thomas, Carl</td>
+<td style="text-align: left;">I Wish</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Thomas, Carl</td>
+<td style="text-align: left;">Summer Rain</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tippin, Aaron</td>
+<td style="text-align: left;">Kiss This</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Train</td>
+<td style="text-align: left;">Meet Virginia</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Trick Daddy</td>
+<td style="text-align: left;">Shut Up</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Trina</td>
+<td style="text-align: left;">Pull Over</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tritt, Travis</td>
+<td style="text-align: left;">Best Of Intentions</td>
+<td style="text-align: right;">97</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tuesday</td>
+<td style="text-align: left;">I Know</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Urban, Keith</td>
+<td style="text-align: left;">Your Everything</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Usher</td>
+<td style="text-align: left;">Pop Ya Collar</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Vassar, Phil</td>
+<td style="text-align: left;">Carlene</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Vassar, Phil</td>
+<td style="text-align: left;">Just Another Day In …</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Vertical Horizon</td>
+<td style="text-align: left;">Everything You Want</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">41</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Vertical Horizon</td>
+<td style="text-align: left;">You’re A God</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Vitamin C</td>
+<td style="text-align: left;">Graduation (Friends …</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Vitamin C</td>
+<td style="text-align: left;">The Itch</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Walker, Clay</td>
+<td style="text-align: left;">Live, Laugh, Love</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Walker, Clay</td>
+<td style="text-align: left;">The Chain Of Love</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Wallflowers, The</td>
+<td style="text-align: left;">Sleepwalker</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Westlife</td>
+<td style="text-align: left;">Swear It Again</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Williams, Robbie</td>
+<td style="text-align: left;">Angels</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wills, Mark</td>
+<td style="text-align: left;">Back At One</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Worley, Darryl</td>
+<td style="text-align: left;">When You Need My Lov…</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wright, Chely</td>
+<td style="text-align: left;">It Was</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Yankee Grey</td>
+<td style="text-align: left;">Another Nine Minutes</td>
+<td style="text-align: right;">86</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Yearwood, Trisha</td>
+<td style="text-align: left;">Real Live Woman</td>
+<td style="text-align: right;">85</td>
+<td style="text-align: right;">81</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ying Yang Twins</td>
+<td style="text-align: left;">Whistle While You Tw…</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Zombie Nation</td>
+<td style="text-align: left;">Kernkraft 400</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">99</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">matchbox twenty</td>
+<td style="text-align: left;">Bent</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">39</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>notable_songs <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  song_summary <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(best_rank <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">slice_min</span>(first_week_at_best_rank, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Notable =</span> <span class="st">"Fastest to number one"</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  song_summary <span class="sc">|&gt;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(best_rank <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">slice_max</span>(first_week_at_best_rank, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Notable =</span> <span class="st">"Slowest to number one"</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  song_summary <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(best_rank <span class="sc">&lt;=</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">slice_max</span>(weeks_on_chart, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Notable =</span> <span class="st">"Longest chart run among top-10 songs"</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    Notable, artist, track, first_week_at_best_rank, weeks_on_chart</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  notable_songs,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Notable song"</span>, <span class="st">"Artist"</span>, <span class="st">"Track"</span>, <span class="st">"Week at best rank"</span>, <span class="st">"Weeks on chart"</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 20%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Notable song</th>
+<th style="text-align: left;">Artist</th>
+<th style="text-align: left;">Track</th>
+<th style="text-align: right;">Week at best rank</th>
+<th style="text-align: right;">Weeks on chart</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Fastest to number one</td>
+<td style="text-align: left;">Madonna</td>
+<td style="text-align: left;">Music</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Slowest to number one</td>
+<td style="text-align: left;">Lonestar</td>
+<td style="text-align: left;">Amazed</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">55</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Longest chart run among top-10 songs</td>
+<td style="text-align: left;">Creed</td>
+<td style="text-align: left;">Higher</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: right;">57</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>top_10_songs <span class="ot">&lt;-</span> song_summary <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(best_rank <span class="sc">&lt;=</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">highlight =</span> dplyr<span class="sc">::</span><span class="fu">case_when</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      artist <span class="sc">==</span> <span class="st">"Madonna"</span> <span class="sc">&amp;</span> track <span class="sc">==</span> <span class="st">"Music"</span> <span class="sc">~</span> <span class="st">"Madonna - Music"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      artist <span class="sc">==</span> <span class="st">"Lonestar"</span> <span class="sc">&amp;</span> track <span class="sc">==</span> <span class="st">"Amazed"</span> <span class="sc">~</span> <span class="st">"Lonestar - Amazed"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      artist <span class="sc">==</span> <span class="st">"Creed"</span> <span class="sc">&amp;</span> track <span class="sc">==</span> <span class="st">"Higher"</span> <span class="sc">~</span> <span class="st">"Creed - Higher"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other top-10 songs"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">inner_join</span>(</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    top_10_songs <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">select</span>(song, highlight),</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"song"</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    ggplot2<span class="sc">::</span><span class="fu">aes</span>(<span class="at">x =</span> week, <span class="at">y =</span> rank, <span class="at">group =</span> song, <span class="at">color =</span> highlight)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.65</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_color_manual</span>(</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Other top-10 songs"</span> <span class="ot">=</span> <span class="st">"gray70"</span>,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Madonna - Music"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Lonestar - Amazed"</span> <span class="ot">=</span> <span class="st">"#0072B2"</span>,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Creed - Higher"</span> <span class="ot">=</span> <span class="st">"#009E73"</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">scale_y_reverse</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">1</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>)) <span class="sc">+</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">labs</span>(</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Week"</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Billboard ranking"</span>,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Song"</span>,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Rankings of songs that reached the top 10"</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2480 rows containing missing values or values outside the scale range
+(`geom_line()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
