@@ -1,12 +1,20 @@
 ---
-title: "Billboard Hot 100"
+title: "Billboard chart analysis"
 Author: Isabella Chandler
-format: html
----
-library(tidyverse)
-#| message: false
+format:
+  html:
+    theme: cosmo
+    toc: true
 execute:
   echo: false
+  message: false
+---
+
+## Overview
+
+This analysis tracks songs across their weekly Billboard Hot 100 rankings, summarizes chart performance, and highlights notable top-10 songs.
+
+## Week 1 rankings
 
 ```{r}
 #| cache: true
@@ -47,6 +55,8 @@ billboard |>
   )
 ```
 
+## Ranking availability
+
 ```{r}
 ranking_counts <- billboard |>
   dplyr::group_by(week) |>
@@ -62,6 +72,8 @@ knitr::kable(
   col.names = c("Week", "Missing rankings", "Present rankings")
 )
 ```
+
+## Chart exits at week 20
 
 ```{r}
 last_week_20 <- billboard |>
@@ -81,6 +93,8 @@ knitr::kable(
 )
 ```
 
+## Song-level summary
+
 ```{r}
 knitr::kable(
   song_summary |>
@@ -94,6 +108,8 @@ knitr::kable(
   )
 )
 ```
+
+## Notable top-10 songs
 
 ```{r}
 notable_songs <- dplyr::bind_rows(
@@ -120,6 +136,8 @@ knitr::kable(
 )
 ```
 
+## Top-10 songs over time
+
 ```{r}
 top_10_songs <- song_summary |>
   dplyr::filter(best_rank <= 10) |>
@@ -137,10 +155,30 @@ billboard |>
     top_10_songs |> dplyr::select(song, highlight),
     by = "song"
   ) |>
+  dplyr::filter(!is.na(rank)) |>
   ggplot2::ggplot(
     ggplot2::aes(x = week, y = rank, group = song, color = highlight)
   ) +
-  ggplot2::geom_line(alpha = 0.65, linewidth = 0.5) +
+  ggplot2::geom_line(
+    data = \(data) dplyr::filter(data, highlight == "Other top-10 songs"),
+    color = "#C7CDD4",
+    alpha = 0.55,
+    linewidth = 0.35,
+    show.legend = FALSE
+  ) +
+  ggplot2::geom_line(
+    data = \(data) dplyr::filter(data, highlight != "Other top-10 songs"),
+    ggplot2::aes(linewidth = highlight),
+    alpha = 0.95
+  ) +
+  ggplot2::scale_linewidth_manual(
+    values = c(
+      "Madonna - Music" = 1,
+      "Lonestar - Amazed" = 1,
+      "Creed - Higher" = 1
+    ),
+    guide = "none"
+  ) +
   ggplot2::scale_color_manual(
     values = c(
       "Other top-10 songs" = "gray70",
@@ -155,5 +193,10 @@ billboard |>
     y = "Billboard ranking",
     color = "Song",
     title = "Rankings of songs that reached the top 10"
+  ) +
+  ggplot2::theme_minimal(base_size = 12) +
+  ggplot2::theme(
+    panel.grid.minor = ggplot2::element_blank(),
+    legend.position = "bottom"
   )
 ```
